@@ -9,4 +9,4 @@ This project requires an API key to access football data. Add your API key to a 
 FOOTBALL_API_KEY=your_api_key_here
 ```
 
-Replace `your_api_key_here` with your actual API key.
+Replace `your_api_key_here` with your actual API key from `https://www.football-data.org/`.
