@@ -1,24 +1,53 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import MatchCard from '../components/MatchCard'
-import { Match } from '../../types/Match'
+import { Match } from '../types/Match'
 
 const HomePage: React.FC = () => {
   const [matches, setMatches] = useState<Match[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMatches = async () => {
-      const response = await fetch('/api/matches?status=SCHEDULED', {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-      const data = await response.json()
-      setMatches(data.matches)
+      try {
+        setLoading(true)
+        const response = await fetch('/api/matches?status=SCHEDULED', {
+          headers: {
+            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+          },
+        })
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        setMatches(data.matches)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchMatches()
   }, [])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader">Loading...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        <p>Error: {error}</p>
+      </div>
+    )
+  }
 
   return (
     <div>

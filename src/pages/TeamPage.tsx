@@ -1,24 +1,55 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { Team } from '../../types/Team'
+import { Team } from '../types/Team'
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+
   const [team, setTeam] = useState<Team | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchTeam = async () => {
-      const response = await fetch(`/api/teams/${id}`, {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-      const data = await response.json()
-      setTeam(data)
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/teams/${id}`, {
+          headers: {
+            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`)
+        }
+
+        const data = await response.json()
+        setTeam(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchTeam()
   }, [id])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader">Loading...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        <p>Error: {error}</p>
+      </div>
+    )
+  }
 
   if (!team) {
     return <p className="p-6 text-center text-gray-500">Team not found.</p>

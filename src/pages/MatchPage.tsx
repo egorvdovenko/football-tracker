@@ -1,24 +1,55 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router'
-import { Match } from '../../types/Match'
+import { Match } from '../types/Match'
 
 const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+
   const [match, setMatch] = useState<Match | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMatch = async () => {
-      const response = await fetch(`/api/matches/${id}`, {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-      const data = await response.json()
-      setMatch(data)
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/matches/${id}`, {
+          headers: {
+            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`)
+        }
+
+        const data = await response.json()
+        setMatch(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchMatch()
   }, [id])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader">Loading...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        <p>Error: {error}</p>
+      </div>
+    )
+  }
 
   if (!match) {
     return <p className="p-6 text-center text-gray-500">Match not found.</p>
