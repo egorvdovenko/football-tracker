@@ -8,7 +8,11 @@ const MatchPage: React.FC = () => {
 
   useEffect(() => {
     const fetchMatch = async () => {
-      const response = await fetch(`/api/matches/${id}`)
+      const response = await fetch(`/api/matches/${id}`, {
+        headers: {
+          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+        },
+      })
       const data = await response.json()
       setMatch(data)
     }
@@ -34,19 +38,18 @@ const MatchPage: React.FC = () => {
       <div className="border border-gray-200 shadow-md rounded-lg overflow-hidden bg-white p-6">
         <div className="space-y-4 text-gray-700">
           <p className="text-lg">
-            <strong className="font-semibold">Date:</strong>
-            {new Date(match.utcDate).toLocaleString('ru-RU', {
-              timeZone: 'Europe/Moscow',
-              hour12: false,
-            })}
+            <strong className="font-semibold">Date:</strong> {
+              new Date(match.utcDate).toLocaleString('ru-RU', {
+                timeZone: 'Europe/Moscow',
+                hour12: false,
+              })
+            }
           </p>
           <p className="text-lg">
-            <strong className="font-semibold">Competition:</strong>
-            {match.competition.name}
+            <strong className="font-semibold">Competition:</strong> {match.competition.name}
           </p>
           <p className="text-lg">
-            <strong className="font-semibold">Status:</strong>
-            {match.status}
+            <strong className="font-semibold">Status:</strong> {match.status}
           </p>
           <p className="text-lg">
             <strong className="font-semibold">Score:</strong>

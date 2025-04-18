@@ -8,7 +8,11 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const fetchMatches = async () => {
-      const response = await fetch('/api/matches?status=SCHEDULED')
+      const response = await fetch('/api/matches?status=SCHEDULED', {
+        headers: {
+          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+        },
+      })
       const data = await response.json()
       setMatches(data.matches)
     }
