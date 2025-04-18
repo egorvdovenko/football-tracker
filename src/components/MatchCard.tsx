@@ -1,12 +1,12 @@
-import React from "react"
+import React from 'react'
 
 interface MatchCardProps {
   match: {
-    homeTeam: { name: string };
-    awayTeam: { name: string };
-    utcDate: string;
-    competition: { name: string };
-  };
+    homeTeam: { name: string }
+    awayTeam: { name: string }
+    utcDate: string
+    competition: { name: string }
+  }
 }
 
 const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
@@ -16,8 +16,8 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
         {match.homeTeam.name} <span className="text-gray-500">vs</span> {match.awayTeam.name}
       </h2>
       <p className="text-sm text-gray-600 mb-1">
-        {new Date(match.utcDate).toLocaleString("ru-RU", {
-          timeZone: "Europe/Moscow",
+        {new Date(match.utcDate).toLocaleString('ru-RU', {
+          timeZone: 'Europe/Moscow',
           hour12: false,
         })}
       </p>

@@ -1,16 +1,20 @@
-import Image from 'next/image'
-import { Team } from '@/types/Team'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
+import { Team } from '../../types/Team'
 
-export default async function TeamPage({ params }: { 
-  params: { id: string } 
-}) {
-  const data = await fetch(`https://api.football-data.org/v4/teams/${params.id}`, {
-    headers: {
-      "X-Auth-Token": process.env.FOOTBALL_API_KEY!,
-    },
-  })
-  
-  const team: Team = await data.json()
+const TeamPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
+  const [team, setTeam] = useState<Team | null>(null)
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      const response = await fetch(`/api/teams/${id}`)
+      const data = await response.json()
+      setTeam(data)
+    }
+
+    fetchTeam()
+  }, [id])
 
   if (!team) {
     return <p className="p-6 text-center text-gray-500">Team not found.</p>
@@ -19,11 +23,11 @@ export default async function TeamPage({ params }: {
   return (
     <div>
       <div className="text-center mb-8">
-        <Image 
-          src={team.crest} 
-          alt={`${team.name} crest`} 
-          width={120} 
-          height={120} 
+        <img
+          src={team.crest}
+          alt={`${team.name} crest`}
+          width={120}
+          height={120}
           className="mx-auto mb-4"
         />
         <h1 className="text-3xl font-extrabold text-gray-800">{team.name}</h1>
@@ -36,11 +40,11 @@ export default async function TeamPage({ params }: {
           <strong className="font-semibold">Address:</strong> {team.address}
         </p>
         <p className="text-lg text-gray-700">
-          <strong className="font-semibold">Website:</strong> 
-          <a 
-            href={team.website} 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <strong className="font-semibold">Website:</strong>
+          <a
+            href={team.website}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue-600 hover:underline ml-1"
           >
             {team.website}
@@ -53,3 +57,5 @@ export default async function TeamPage({ params }: {
     </div>
   )
 }
+
+export default TeamPage
