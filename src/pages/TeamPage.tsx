@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { Team } from '../types/Team'
+import { Team } from '~/types/Team'
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -25,8 +25,12 @@ const TeamPage: React.FC = () => {
 
         const data = await response.json()
         setTeam(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('An unknown error occurred')
+        }
       } finally {
         setLoading(false)
       }

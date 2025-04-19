@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router'
-import { Match } from '../types/Match'
+import { Match } from '~/types/Match'
 
 const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -25,8 +25,12 @@ const MatchPage: React.FC = () => {
 
         const data = await response.json()
         setMatch(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('An unknown error occurred')
+        }
       } finally {
         setLoading(false)
       }

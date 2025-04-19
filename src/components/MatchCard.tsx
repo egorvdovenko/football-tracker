@@ -1,12 +1,8 @@
 import React from 'react'
+import { Match } from '~/types/Match'
 
 interface MatchCardProps {
-  match: {
-    homeTeam: { name: string }
-    awayTeam: { name: string }
-    utcDate: string
-    competition: { name: string }
-  }
+  match: Match
 }
 
 const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
