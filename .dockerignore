@@ -1,0 +1,62 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# Build outputs
+dist/
+build/
+out/
+
+# Test and debug artifacts
+test/
+tests/
+debug/
+*.log
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+.env.local
+
+# Local and temp files
+.local/
+local/
+tmp/
+temp/
+*.tmp
+.DS_Store
+
+# Documentation
+README*
+*.md
+docs/
+
+# Docker and Compose files
+Dockerfile*
+docker-compose*
+compose.yaml
+
+# Project-specific
+public/
+
+# TypeScript cache (if any)
+*.tsbuildinfo
+
+# Miscellaneous
+eslint.config.js
