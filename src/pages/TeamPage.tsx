@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Team } from '~/types/Team'
+import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext';
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const { state, dispatch } = useFavorites();
 
   const [team, setTeam] = useState<Team | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -38,6 +40,26 @@ const TeamPage: React.FC = () => {
 
     fetchTeam()
   }, [id])
+
+  const isFavorite = state.favorites.some(fav => fav.id === team?.id);
+
+  const handleAddFavorite = () => {
+    if (team) {
+      dispatch({ 
+        type: FavoritesActionType.AddFavorite, 
+        payload: team 
+      });
+    }
+  };
+
+  const handleRemoveFavorite = () => {
+    if (team) {
+      dispatch({ 
+        type: FavoritesActionType.RemoveFavorite, 
+        payload: team.id 
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -92,6 +114,23 @@ const TeamPage: React.FC = () => {
         <p className="text-lg text-gray-700">
           <strong className="font-semibold">Venue:</strong> {team.venue}
         </p>
+      </div>
+      <div className="text-center mt-4">
+        {isFavorite ? (
+          <button 
+            className="bg-red-500 text-white px-4 py-2 rounded"
+            onClick={handleRemoveFavorite} 
+          >
+            Remove from Favorites
+          </button>
+        ) : (
+          <button 
+            onClick={handleAddFavorite} 
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Add to Favorites
+          </button>
+        )}
       </div>
     </div>
   )

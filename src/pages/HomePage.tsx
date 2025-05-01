@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router'
+import { useFavorites } from '~/context/FavoritesContext'
 import MatchCard from '~/components/MatchCard'
 import { Match } from '~/types/Match'
 
@@ -7,6 +8,8 @@ const HomePage: React.FC = () => {
   const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+
+  const { state } = useFavorites()
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -58,6 +61,20 @@ const HomePage: React.FC = () => {
       <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
         Upcoming Matches
       </h1>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+        Favorite Teams
+      </h2>
+      {state.favorites.length > 0 ? (
+        <ul className="list-disc list-inside mb-8">
+          {state.favorites.map(team => (
+            <li key={team.id}>
+              <Link to={`/teams/${team.id}`}>{team.name}</Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center text-gray-600 mb-8">No favorite teams yet.</p>
+      )}
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {matches.map((match) => (
           <li
