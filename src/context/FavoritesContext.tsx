@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react';
 import { Team } from '../types/Team';
 
 interface FavoritesState {
-  favorites: Team[];
+  teams: Team[];
 }
 
 export enum FavoritesActionType {
@@ -10,20 +10,12 @@ export enum FavoritesActionType {
   RemoveFavorite = 'REMOVE_FAVORITE',
 }
 
-interface AddFavoriteAction {
-  type: FavoritesActionType.AddFavorite;
-  payload: Team;
-}
-
-interface RemoveFavoriteAction {
-  type: FavoritesActionType.RemoveFavorite;
-  payload: Team['id'];
-}
-
-type FavoritesAction = AddFavoriteAction | RemoveFavoriteAction;
+type FavoritesAction = 
+  | { type: FavoritesActionType.AddFavorite, payload: Team }
+  | { type: FavoritesActionType.RemoveFavorite, payload: Team['id'] };
 
 const initialState: FavoritesState = {
-  favorites: [],
+  teams: [],
 };
 
 function favoritesReducer(state: FavoritesState, action: FavoritesAction): FavoritesState {
@@ -31,12 +23,12 @@ function favoritesReducer(state: FavoritesState, action: FavoritesAction): Favor
     case FavoritesActionType.AddFavorite:
       return {
         ...state,
-        favorites: [...state.favorites, action.payload],
+        teams: [...state.teams, action.payload],
       };
     case FavoritesActionType.RemoveFavorite:
       return {
         ...state,
-        favorites: state.favorites.filter(team => team.id !== action.payload),
+        teams: state.teams.filter(team => team.id !== action.payload),
       };
     default:
       return state;

@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  const { state } = useFavorites()
+  const { state: favorites } = useFavorites()
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -64,9 +64,9 @@ const HomePage: React.FC = () => {
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
         Favorite Teams
       </h2>
-      {state.favorites.length > 0 ? (
+      {favorites.teams.length > 0 ? (
         <ul className="list-disc list-inside mb-8">
-          {state.favorites.map(team => (
+          {favorites.teams.map(team => (
             <li key={team.id}>
               <Link to={`/teams/${team.id}`}>{team.name}</Link>
             </li>

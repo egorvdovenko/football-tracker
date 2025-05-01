@@ -5,7 +5,7 @@ import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext';
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { state, dispatch } = useFavorites();
+  const { state: favorites, dispatch } = useFavorites();
 
   const [team, setTeam] = useState<Team | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -41,7 +41,7 @@ const TeamPage: React.FC = () => {
     fetchTeam()
   }, [id])
 
-  const isFavorite = state.favorites.some(fav => fav.id === team?.id);
+  const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id);
 
   const handleAddFavorite = () => {
     if (team) {
