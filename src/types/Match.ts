@@ -31,8 +31,90 @@ export interface Match {
   stage: string;
   group: null | string;
   lastUpdated: string;
-  homeTeam: Team;
-  awayTeam: Team;
+  homeTeam: {
+    id: number;
+    name: string;
+    shortName: string;
+    tla: string;
+    crest: string;
+    coach: {
+      id: number;
+      name: string;
+      nationality: string;
+    };
+    leagueRank: null | number;
+    formation: string;
+    lineup: {
+      id: number;
+      name: string;
+      position: string | null;
+      shirtNumber: number;
+    }[];
+    bench: {
+      id: number;
+      name: string;
+      position: string | null;
+      shirtNumber: number;
+    }[];
+    statistics: {
+      corner_kicks: number;
+      free_kicks: number;
+      goal_kicks: number;
+      offsides: number;
+      fouls: number;
+      ball_possession: number;
+      saves: number;
+      throw_ins: number;
+      shots: number;
+      shots_on_goal: number;
+      shots_off_goal: number;
+      yellow_cards: number;
+      yellow_red_cards: number;
+      red_cards: number;
+    };
+  };
+  awayTeam: {
+    id: number;
+    name: string;
+    shortName: string;
+    tla: string;
+    crest: string;
+    coach: {
+      id: number;
+      name: string;
+      nationality: string;
+    };
+    leagueRank: null | number;
+    formation: string;
+    lineup: {
+      id: number;
+      name: string;
+      position: string | null;
+      shirtNumber: number;
+    }[];
+    bench: {
+      id: number;
+      name: string;
+      position: string | null;
+      shirtNumber: number;
+    }[];
+    statistics: {
+      corner_kicks: number;
+      free_kicks: number;
+      goal_kicks: number;
+      offsides: number;
+      fouls: number;
+      ball_possession: number;
+      saves: number;
+      throw_ins: number;
+      shots: number;
+      shots_on_goal: number;
+      shots_off_goal: number;
+      yellow_cards: number;
+      yellow_red_cards: number;
+      red_cards: number;
+    };
+  };
   score: {
     winner: string;
     duration: string;
@@ -45,126 +127,74 @@ export interface Match {
       away: number;
     };
   };
-  goals: Goal[];
-  penalties: Penalty[];
-  bookings: Booking[];
-  substitutions: Substitution[];
+  goals: {
+    minute: number;
+    injuryTime: number | null;
+    type: string;
+    team: {
+      id: number;
+      name: string;
+    };
+    scorer: {
+      id: number;
+      name: string;
+    };
+    assist: {
+      id: number;
+      name: string;
+    } | null;
+    score: {
+      home: number;
+      away: number;
+    };
+  }[];
+  penalties: {
+    player: {
+      id: number;
+      name: string;
+    };
+    team: {
+      id: number | null;
+      name: string | null;
+    };
+    scored: boolean;
+  }[];
+  bookings: {
+    minute: number;
+    team: {
+      id: number;
+      name: string;
+    };
+    player: {
+      id: number;
+      name: string;
+    };
+    card: string;
+  }[];
+  substitutions: {
+    minute: number;
+    team: {
+      id: number;
+      name: string;
+    };
+    playerOut: {
+      id: number;
+      name: string;
+    };
+    playerIn: {
+      id: number;
+      name: string;
+    };
+  }[];
   odds: {
     homeWin: number;
     draw: number;
     awayWin: number;
   };
-  referees: Referee[];
-}
-
-export interface Team {
-  id: number;
-  name: string;
-  shortName: string;
-  tla: string;
-  crest: string;
-  coach: {
+  referees: {
     id: number;
     name: string;
-    nationality: string;
-  };
-  leagueRank: null | number;
-  formation: string;
-  lineup: Player[];
-  bench: Player[];
-  statistics: TeamStatistics;
-}
-
-export interface Player {
-  id: number;
-  name: string;
-  position: string | null;
-  shirtNumber: number;
-}
-
-export interface TeamStatistics {
-  corner_kicks: number;
-  free_kicks: number;
-  goal_kicks: number;
-  offsides: number;
-  fouls: number;
-  ball_possession: number;
-  saves: number;
-  throw_ins: number;
-  shots: number;
-  shots_on_goal: number;
-  shots_off_goal: number;
-  yellow_cards: number;
-  yellow_red_cards: number;
-  red_cards: number;
-}
-
-export interface Goal {
-  minute: number;
-  injuryTime: number | null;
-  type: string;
-  team: {
-    id: number;
-    name: string;
-  };
-  scorer: {
-    id: number;
-    name: string;
-  };
-  assist: {
-    id: number;
-    name: string;
-  } | null;
-  score: {
-    home: number;
-    away: number;
-  };
-}
-
-export interface Penalty {
-  player: {
-    id: number;
-    name: string;
-  };
-  team: {
-    id: number | null;
-    name: string | null;
-  };
-  scored: boolean;
-}
-
-export interface Booking {
-  minute: number;
-  team: {
-    id: number;
-    name: string;
-  };
-  player: {
-    id: number;
-    name: string;
-  };
-  card: string;
-}
-
-export interface Substitution {
-  minute: number;
-  team: {
-    id: number;
-    name: string;
-  };
-  playerOut: {
-    id: number;
-    name: string;
-  };
-  playerIn: {
-    id: number;
-    name: string;
-  };
-}
-
-export interface Referee {
-  id: number;
-  name: string;
-  type: string;
-  nationality: string | null;
+    type: string;
+    nationality: string | null;
+  }[];
 }

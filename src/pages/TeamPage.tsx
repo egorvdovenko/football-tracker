@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useParams, Link } from 'react-router'
 import { Team } from '~/types/Team'
 import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext';
 
@@ -130,6 +130,22 @@ const TeamPage: React.FC = () => {
           >
             Add to Favorites
           </button>
+        )}
+      </div>
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Players</h2>
+        {team.squad.length > 0 ? (
+          <ul className="list-disc list-inside">
+            {team.squad.map(player => (
+              <li key={player.id}>
+                <Link to={`/players/${player.id}`} className="text-blue-600 hover:underline">
+                  {player.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">No players available for this team.</p>
         )}
       </div>
     </div>
