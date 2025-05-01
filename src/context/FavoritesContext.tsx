@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, ReactNode } from 'react'
+import React, { createContext, useReducer, useContext, ReactNode, useEffect } from 'react'
 import { Team } from '../types/Team'
 
 interface FavoritesState {
@@ -16,6 +16,14 @@ type FavoritesAction =
 
 const initialState: FavoritesState = {
   teams: [],
+}
+
+function loadInitialState(): FavoritesState {
+  const storedState = localStorage.getItem('favorites')
+  
+  return storedState 
+    ? JSON.parse(storedState) 
+    : initialState
 }
 
 function favoritesReducer(state: FavoritesState, action: FavoritesAction): FavoritesState {
@@ -41,7 +49,11 @@ const FavoritesContext = createContext<{
 } | null>(null)
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(favoritesReducer, initialState)
+  const [state, dispatch] = useReducer(favoritesReducer, loadInitialState())
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(state))
+  }, [state])
 
   return (
     <FavoritesContext.Provider value={{ state, dispatch }}>
