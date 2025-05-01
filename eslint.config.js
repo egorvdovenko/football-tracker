@@ -19,6 +19,8 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      semi: ['error', 'never'],
+      quotes: ['error', 'single'],
     },
   },
 )

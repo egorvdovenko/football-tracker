@@ -1,5 +1,5 @@
-import React, { createContext, useReducer, useContext, ReactNode } from 'react';
-import { Team } from '../types/Team';
+import React, { createContext, useReducer, useContext, ReactNode } from 'react'
+import { Team } from '../types/Team'
 
 interface FavoritesState {
   teams: Team[];
@@ -16,7 +16,7 @@ type FavoritesAction =
 
 const initialState: FavoritesState = {
   teams: [],
-};
+}
 
 function favoritesReducer(state: FavoritesState, action: FavoritesAction): FavoritesState {
   switch (action.type) {
@@ -24,36 +24,36 @@ function favoritesReducer(state: FavoritesState, action: FavoritesAction): Favor
       return {
         ...state,
         teams: [...state.teams, action.payload],
-      };
+      }
     case FavoritesActionType.RemoveFavorite:
       return {
         ...state,
         teams: state.teams.filter(team => team.id !== action.payload),
-      };
+      }
     default:
-      return state;
+      return state
   }
 }
 
 const FavoritesContext = createContext<{
   state: FavoritesState;
   dispatch: React.Dispatch<FavoritesAction>;
-} | null>(null);
+} | null>(null)
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(favoritesReducer, initialState);
+  const [state, dispatch] = useReducer(favoritesReducer, initialState)
 
   return (
     <FavoritesContext.Provider value={{ state, dispatch }}>
       {children}
     </FavoritesContext.Provider>
-  );
-};
+  )
+}
 
 export const useFavorites = () => {
-  const context = useContext(FavoritesContext);
+  const context = useContext(FavoritesContext)
   if (!context) {
-    throw new Error('useFavorites must be used within a FavoritesProvider');
+    throw new Error('useFavorites must be used within a FavoritesProvider')
   }
-  return context;
-};
+  return context
+}

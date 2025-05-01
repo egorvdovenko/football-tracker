@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router'
 import { Team } from '~/types/Team'
-import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext';
+import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext'
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { state: favorites, dispatch } = useFavorites();
+  const { state: favorites, dispatch } = useFavorites()
 
   const [team, setTeam] = useState<Team | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -41,25 +41,25 @@ const TeamPage: React.FC = () => {
     fetchTeam()
   }, [id])
 
-  const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id);
+  const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id)
 
   const handleAddFavorite = () => {
     if (team) {
       dispatch({ 
         type: FavoritesActionType.AddFavorite, 
         payload: team 
-      });
+      })
     }
-  };
+  }
 
   const handleRemoveFavorite = () => {
     if (team) {
       dispatch({ 
         type: FavoritesActionType.RemoveFavorite, 
         payload: team.id 
-      });
+      })
     }
-  };
+  }
 
   if (loading) {
     return (

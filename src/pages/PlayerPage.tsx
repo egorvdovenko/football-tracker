@@ -1,50 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 import { Player } from '~/types/Player'
 
 const PlayerPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>()
 
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [player, setPlayer] = useState<Player | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchPlayer = async () => {
       try {
-        setLoading(true);
+        setLoading(true)
         const response = await fetch(`/api/persons/${id}`, {
           headers: {
             'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+          throw new Error(`Error: ${response.status} ${response.statusText}`)
         }
 
-        const data = await response.json();
-        setPlayer(data);
+        const data = await response.json()
+        setPlayer(data)
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(err.message);
+          setError(err.message)
         } else {
-          setError('An unknown error occurred');
+          setError('An unknown error occurred')
         }
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchPlayer();
-  }, [id]);
+    fetchPlayer()
+  }, [id])
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">Loading...</div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -52,11 +52,11 @@ const PlayerPage: React.FC = () => {
       <div className="text-center text-red-500">
         <p>Error: {error}</p>
       </div>
-    );
+    )
   }
 
   if (!player) {
-    return <p className="p-6 text-center text-gray-500">Player not found.</p>;
+    return <p className="p-6 text-center text-gray-500">Player not found.</p>
   }
 
   return (
@@ -79,7 +79,7 @@ const PlayerPage: React.FC = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PlayerPage;
+export default PlayerPage
