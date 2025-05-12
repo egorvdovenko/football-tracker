@@ -10,6 +10,8 @@ const PlayerPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let isMounted = true
+
     const fetchPlayer = async () => {
       try {
         setLoading(true)
@@ -24,19 +26,29 @@ const PlayerPage: React.FC = () => {
         }
 
         const data = await response.json()
-        setPlayer(data)
+        if (isMounted) {
+          setPlayer(data)
+        }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
+        if (isMounted) {
+          if (err instanceof Error) {
+            setError(err.message)
+          } else {
+            setError('An unknown error occurred')
+          }
         }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchPlayer()
+
+    return () => {
+      isMounted = false
+    }
   }, [id])
 
   if (loading) {

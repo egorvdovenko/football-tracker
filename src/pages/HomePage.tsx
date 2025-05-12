@@ -12,6 +12,8 @@ const HomePage: React.FC = () => {
   const { state: favorites } = useFavorites()
 
   useEffect(() => {
+    let isMounted = true
+
     const fetchMatches = async () => {
       try {
         setLoading(true)
@@ -20,24 +22,35 @@ const HomePage: React.FC = () => {
             'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
           },
         })
+        
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`)
         }
-        
+
         const data = await response.json()
-        setMatches(data.matches)
+        if (isMounted) {
+          setMatches(data.matches)
+        }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
+        if (isMounted) {
+          if (err instanceof Error) {
+            setError(err.message)
+          } else {
+            setError('An unknown error occurred')
+          }
         }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchMatches()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   if (loading) {

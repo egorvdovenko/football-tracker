@@ -12,6 +12,8 @@ const TeamPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let isMounted = true
+
     const fetchTeam = async () => {
       try {
         setLoading(true)
@@ -26,19 +28,29 @@ const TeamPage: React.FC = () => {
         }
 
         const data = await response.json()
-        setTeam(data)
+        if (isMounted) {
+          setTeam(data)
+        }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
+        if (isMounted) {
+          if (err instanceof Error) {
+            setError(err.message)
+          } else {
+            setError('An unknown error occurred')
+          }
         }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchTeam()
+
+    return () => {
+      isMounted = false
+    }
   }, [id])
 
   const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id)
