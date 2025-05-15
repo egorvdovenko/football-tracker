@@ -1,3 +1,5 @@
+// https://docs.football-data.org/general/v4/team.html
+
 export interface Team {
   id: number;
   name: string;
