@@ -1,57 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router'
 import { Team } from '~/types/Team'
 import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext'
+import { useFetchResource } from '~/hooks/useFetchResource'
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { state: favorites, dispatch } = useFavorites()
-
-  const [team, setTeam] = useState<Team | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchTeam = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/teams/${id}`, {
-          headers: {
-            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`)
-        }
-
-        const data = await response.json()
-        if (isMounted) {
-          setTeam(data)
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('An unknown error occurred')
-          }
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchTeam()
-
-    return () => {
-      isMounted = false
-    }
-  }, [id])
+  const { 
+    data: team, loading, error 
+  } = useFetchResource<Team>(`/api/teams/${id}`)
 
   const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id)
 

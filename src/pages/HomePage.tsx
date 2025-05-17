@@ -1,57 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router'
 import { useFavorites } from '~/context/FavoritesContext'
 import MatchCard from '~/components/MatchCard'
 import { Match } from '~/types/Match'
+import { useFetchResource } from '~/hooks/useFetchResource'
 
 const HomePage: React.FC = () => {
-  const [matches, setMatches] = useState<Match[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
   const { state: favorites } = useFavorites()
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchMatches = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch('/api/matches?status=SCHEDULED', {
-          headers: {
-            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-          },
-        })
-        
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`)
-        }
-
-        const data = await response.json()
-        if (isMounted) {
-          setMatches(data.matches)
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('An unknown error occurred')
-          }
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchMatches()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
+  const { 
+    data, loading, error 
+  } = useFetchResource<{ matches: Match[] }>('/api/matches?status=SCHEDULED')
+  const matches = data?.matches ?? []
 
   if (loading) {
     return (
@@ -67,6 +26,9 @@ const HomePage: React.FC = () => {
         <p>Error: {error}</p>
       </div>
     )
+  }
+  if (!matches.length) {
+    return <p className="p-6 text-center text-gray-500">No upcoming matches.</p>
   }
 
   return (

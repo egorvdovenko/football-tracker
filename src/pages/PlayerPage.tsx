@@ -1,55 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router'
+import { useFetchResource } from '~/hooks/useFetchResource'
 import { Player } from '~/types/Player'
 
 const PlayerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-
-  const [player, setPlayer] = useState<Player | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchPlayer = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/persons/${id}`, {
-          headers: {
-            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`)
-        }
-
-        const data = await response.json()
-        if (isMounted) {
-          setPlayer(data)
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('An unknown error occurred')
-          }
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchPlayer()
-
-    return () => {
-      isMounted = false
-    }
-  }, [id])
+  const { 
+    data: player, loading, error 
+  } = useFetchResource<Player>(`/api/persons/${id}`)
 
   if (loading) {
     return (

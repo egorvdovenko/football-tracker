@@ -1,55 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router'
 import { Match } from '~/types/Match'
+import { useFetchResource } from '~/hooks/useFetchResource'
 
 const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-
-  const [match, setMatch] = useState<Match | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchMatch = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/matches/${id}`, {
-          headers: {
-            'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`)
-        }
-
-        const data = await response.json()
-        if (isMounted) {
-          setMatch(data)
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          if (err instanceof Error) {
-            setError(err.message)
-          } else {
-            setError('An unknown error occurred')
-          }
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchMatch()
-
-    return () => {
-      isMounted = false
-    }
-  }, [id])
+  const { 
+    data: match, loading, error 
+  } = useFetchResource<Match>(`/api/matches/${id}`)
 
   if (loading) {
     return (
