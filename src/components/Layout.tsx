@@ -28,7 +28,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </main>
       <footer className="bg-gray-800 text-white">
         <div className="max-w-4xl mx-auto p-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Football Tracker. All rights reserved.</p>
+          <p>{new Date().getFullYear()} React Application</p>
         </div>
       </footer>
     </div>
