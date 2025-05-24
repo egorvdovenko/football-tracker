@@ -4,14 +4,27 @@ import { BrowserRouter } from 'react-router'
 import App from './App'
 import './styles/globals.css'
 import { FavoritesProvider } from './context/FavoritesContext'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
+    },
+  }
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <FavoritesProvider>
-        <App />
-      </FavoritesProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <FavoritesProvider>
+          <App />
+        </FavoritesProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>
 )

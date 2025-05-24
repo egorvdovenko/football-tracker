@@ -1,17 +1,35 @@
 import React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams, Link } from 'react-router'
-import { Team } from '~/types/Team'
 import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext'
-import { useFetchResource } from '~/hooks/useFetchResource'
+import { Team } from '~/types/Team'
 
 const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { state: favorites, dispatch } = useFavorites()
-  const { 
-    data: team, loading, error 
-  } = useFetchResource<Team>(`/api/teams/${id}`)
+  
+  const { data: team, isLoading, error } = useQuery<Team>({
+    queryKey: ['team', id],
+    queryFn: async () => {
+      if (!id) throw new Error('No team id')
 
-  const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id)
+      const response = await fetch(`/api/teams/${id}`, {
+        headers: {
+          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`)
+      }
+
+      return response.json()
+    },
+    enabled: !!id,
+  })
+  
+  const isFavorite = favorites.teams
+    .some(favoriteTeam => favoriteTeam.id === team?.id)
 
   const handleAddFavorite = () => {
     if (team) {
@@ -31,7 +49,7 @@ const TeamPage: React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">Loading...</div>
@@ -42,7 +60,7 @@ const TeamPage: React.FC = () => {
   if (error) {
     return (
       <div className="text-center text-red-500">
-        <p>Error: {error}</p>
+        <p>Error: {error instanceof Error ? error.message : String(error)}</p>
       </div>
     )
   }
@@ -106,7 +124,7 @@ const TeamPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Players</h2>
         {team.squad.length > 0 ? (
           <ul className="list-disc list-inside">
-            {team.squad.map(player => (
+            {team.squad.map((player: { id: number; name: string }) => (
               <li key={player.id}>
                 <Link to={`/players/${player.id}`} className="text-blue-600 hover:underline">
                   {player.name}

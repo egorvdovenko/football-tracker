@@ -1,15 +1,32 @@
 import React from 'react'
 import { useParams, Link } from 'react-router'
+import { useQuery } from '@tanstack/react-query'
 import { Match } from '~/types/Match'
-import { useFetchResource } from '~/hooks/useFetchResource'
 
 const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { 
-    data: match, loading, error 
-  } = useFetchResource<Match>(`/api/matches/${id}`)
+  
+  const { data: match, isLoading, error } = useQuery<Match>({
+    queryKey: ['match', id],
+    queryFn: async () => {
+      if (!id) throw new Error('No match id')
+        
+      const response = await fetch(`/api/matches/${id}`, {
+        headers: {
+          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+        },
+      })
 
-  if (loading) {
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`)
+      }
+
+      return response.json()
+    },
+    enabled: !!id,
+  })
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">Loading...</div>
@@ -20,7 +37,7 @@ const MatchPage: React.FC = () => {
   if (error) {
     return (
       <div className="text-center text-red-500">
-        <p>Error: {error}</p>
+        <p>Error: {error instanceof Error ? error.message : String(error)}</p>
       </div>
     )
   }

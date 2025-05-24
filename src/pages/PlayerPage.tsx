@@ -1,15 +1,32 @@
 import React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
-import { useFetchResource } from '~/hooks/useFetchResource'
 import { Player } from '~/types/Player'
 
 const PlayerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { 
-    data: player, loading, error 
-  } = useFetchResource<Player>(`/api/persons/${id}`)
 
-  if (loading) {
+  const { data: player, isLoading, error } = useQuery<Player>({
+    queryKey: ['player', id],
+    queryFn: async () => {
+      if (!id) throw new Error('No player id')
+
+      const response = await fetch(`/api/persons/${id}`, {
+        headers: {
+          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`)
+      }
+      
+      return response.json()
+    },
+    enabled: !!id,
+  })
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">Loading...</div>
@@ -20,7 +37,7 @@ const PlayerPage: React.FC = () => {
   if (error) {
     return (
       <div className="text-center text-red-500">
-        <p>Error: {error}</p>
+        <p>Error: {error instanceof Error ? error.message : String(error)}</p>
       </div>
     )
   }
