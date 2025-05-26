@@ -21,7 +21,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </header>
       <main
-        className="flex-grow max-w-4xl mx-auto p-6 overflow-y-auto"
+        className="flex-grow w-1200 max-w-4xl mx-auto p-6 overflow-y-auto"
         style={{ height: 'calc(100vh - 128px)' }}
       >
         {children}
