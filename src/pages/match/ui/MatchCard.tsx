@@ -1,6 +1,6 @@
 import React from 'react'
-import { Match } from '~/types/Match'
-import { useFavorites } from '~/context/FavoritesContext'
+import { Match } from '~/shared/types/Match'
+import { useFavorites } from '~/features/favorites/FavoritesContext'
 
 interface MatchCardProps {
   match: Match

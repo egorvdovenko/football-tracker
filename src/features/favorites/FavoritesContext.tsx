@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useContext, ReactNode, useEffect } from 'react'
-import { Team } from '../types/Team'
+import { Team } from '~/shared/types/Team'
 
 interface FavoritesState {
   teams: Team[];

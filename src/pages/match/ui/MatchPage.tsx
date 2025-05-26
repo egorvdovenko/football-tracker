@@ -1,11 +1,10 @@
 import React from 'react'
 import { useParams, Link } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Match } from '~/types/Match'
+import { Match } from '~/shared/types/Match'
 
-const MatchPage: React.FC = () => {
+export const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  
   const { data: match, isLoading, error } = useQuery<Match>({
     queryKey: ['match', id],
     queryFn: async () => {
@@ -84,5 +83,3 @@ const MatchPage: React.FC = () => {
     </div>
   )
 }
-
-export default MatchPage

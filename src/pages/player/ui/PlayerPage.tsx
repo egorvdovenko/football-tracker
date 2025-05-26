@@ -1,9 +1,9 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
-import { Player } from '~/types/Player'
+import { Player } from '~/shared/types/Player'
 
-const PlayerPage: React.FC = () => {
+export const PlayerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
 
   const { data: player, isLoading, error } = useQuery<Player>({
@@ -68,5 +68,3 @@ const PlayerPage: React.FC = () => {
     </div>
   )
 }
-
-export default PlayerPage

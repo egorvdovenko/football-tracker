@@ -1,10 +1,10 @@
 import React from 'react'
 import { Routes, Route } from 'react-router'
-import HomePage from './pages/HomePage'
-import TeamPage from './pages/TeamPage'
-import MatchPage from './pages/MatchPage'
-import PlayerPage from './pages/PlayerPage'
-import Layout from './components/Layout'
+import { HomePage } from '~/pages/home'
+import { TeamPage } from '~/pages/team'
+import { MatchPage } from '~/pages/match'
+import { PlayerPage } from '~/pages/player'
+import Layout from '~/shared/ui/Layout'
 
 const App: React.FC = () => {
   return (

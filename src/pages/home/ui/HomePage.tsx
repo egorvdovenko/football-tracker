@@ -1,10 +1,10 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import MatchCard from '~/components/MatchCard'
-import { Match } from '~/types/Match'
+import MatchCard from '~/pages/match/ui/MatchCard'
+import { Match } from '~/shared/types/Match'
 
-const HomePage: React.FC = () => {  
+export const HomePage: React.FC = () => {  
   const { data, isLoading, error } = useQuery<{ matches: Match[] }>({
     queryKey: ['matches', 'scheduled'],
     queryFn: async () => {
@@ -64,5 +64,3 @@ const HomePage: React.FC = () => {
     </div>
   )
 }
-
-export default HomePage

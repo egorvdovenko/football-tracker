@@ -1,10 +1,10 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams, Link } from 'react-router'
-import { useFavorites, FavoritesActionType } from '~/context/FavoritesContext'
-import { Team } from '~/types/Team'
+import { useFavorites, FavoritesActionType } from '~/features/favorites/FavoritesContext'
+import { Team } from '~/shared/types/Team'
 
-const TeamPage: React.FC = () => {
+export const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { state: favorites, dispatch } = useFavorites()
   
@@ -139,5 +139,3 @@ const TeamPage: React.FC = () => {
     </div>
   )
 }
-
-export default TeamPage
