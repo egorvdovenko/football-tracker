@@ -1,4 +1,4 @@
-import { Team } from '~/entities/team/model/Team'
+import { Team } from '~/entities/team'
 
 export interface FavoritesState {
   teams: Team[];

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
 import './globals.css'
-import { FavoritesProvider } from '~/features/favorites/model/FavoritesContext'
+import { FavoritesProvider } from '~/features/favorites'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
