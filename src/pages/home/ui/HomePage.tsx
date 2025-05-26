@@ -1,27 +1,10 @@
 import React from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import MatchCard from '~/pages/match/ui/MatchCard'
-import { Match } from '~/shared/types/Match'
+import { useScheduledMatches, Match } from '~/entities/match'
+import MatchCard from './MatchCard'
 
 export const HomePage: React.FC = () => {  
-  const { data, isLoading, error } = useQuery<{ matches: Match[] }>({
-    queryKey: ['matches', 'scheduled'],
-    queryFn: async () => {
-      const response = await fetch('/api/matches?status=SCHEDULED', {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`)
-      }
-      
-      return response.json()
-    },
-  })
-
+  const { data, isLoading, error } = useScheduledMatches()
   const matches: Match[] = data?.matches || []
 
   if (isLoading) {

@@ -1,35 +1,14 @@
 import React from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { useParams, Link } from 'react-router'
-import { useFavorites, FavoritesActionType } from '~/features/favorites/FavoritesContext'
-import { Team } from '~/shared/types/Team'
+import { useTeamById } from '~/entities/team'
+import { useFavorites, FavoritesActionType } from '~/features/favorites'
 
 export const TeamPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { state: favorites, dispatch } = useFavorites()
+  const { data: team, isLoading, error } = useTeamById(id)
   
-  const { data: team, isLoading, error } = useQuery<Team>({
-    queryKey: ['team', id],
-    queryFn: async () => {
-      if (!id) throw new Error('No team id')
-
-      const response = await fetch(`/api/teams/${id}`, {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`)
-      }
-
-      return response.json()
-    },
-    enabled: !!id,
-  })
-  
-  const isFavorite = favorites.teams
-    .some(favoriteTeam => favoriteTeam.id === team?.id)
+  const isFavorite = favorites.teams.some(favoriteTeam => favoriteTeam.id === team?.id)
 
   const handleAddFavorite = () => {
     if (team) {

@@ -1,30 +1,10 @@
 import React from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
-import { Player } from '~/shared/types/Player'
+import { usePlayerById } from '~/entities/player'
 
 export const PlayerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-
-  const { data: player, isLoading, error } = useQuery<Player>({
-    queryKey: ['player', id],
-    queryFn: async () => {
-      if (!id) throw new Error('No player id')
-
-      const response = await fetch(`/api/persons/${id}`, {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`)
-      }
-      
-      return response.json()
-    },
-    enabled: !!id,
-  })
+  const { data: player, isLoading, error } = usePlayerById(id)
 
   if (isLoading) {
     return (

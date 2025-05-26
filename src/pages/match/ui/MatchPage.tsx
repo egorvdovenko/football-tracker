@@ -1,29 +1,10 @@
 import React from 'react'
 import { useParams, Link } from 'react-router'
-import { useQuery } from '@tanstack/react-query'
-import { Match } from '~/shared/types/Match'
+import { useMatchById } from '~/entities/match'
 
 export const MatchPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { data: match, isLoading, error } = useQuery<Match>({
-    queryKey: ['match', id],
-    queryFn: async () => {
-      if (!id) throw new Error('No match id')
-        
-      const response = await fetch(`/api/matches/${id}`, {
-        headers: {
-          'X-Auth-Token': import.meta.env.VITE_FOOTBALL_API_KEY,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`)
-      }
-
-      return response.json()
-    },
-    enabled: !!id,
-  })
+  const { data: match, isLoading, error } = useMatchById(id)
 
   if (isLoading) {
     return (

@@ -1,18 +1,5 @@
 import React, { createContext, useReducer, useContext, ReactNode, useEffect } from 'react'
-import { Team } from '~/shared/types/Team'
-
-interface FavoritesState {
-  teams: Team[];
-}
-
-export enum FavoritesActionType {
-  AddFavorite = 'ADD_FAVORITE',
-  RemoveFavorite = 'REMOVE_FAVORITE',
-}
-
-type FavoritesAction = 
-  | { type: FavoritesActionType.AddFavorite, payload: Team }
-  | { type: FavoritesActionType.RemoveFavorite, payload: Team['id'] };
+import { FavoritesState, FavoritesAction, FavoritesActionType } from '../types/Favorites'
 
 const initialState: FavoritesState = {
   teams: [],
